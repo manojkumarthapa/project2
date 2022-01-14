@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Company Directory</title>
+</head>
+
+<body>
+    <header>
+        <div class="headerImg">
+            <a href="#"><img src="assets/images/logo.jpg" alt="logo" id="logo"></a>
+        </div>
+        <div class="headerWord">
+            <h2>Company Directory</h2>
+        </div>
+        <div class="menu-btn">
+            <div class="menu-btn__burger"></div>
+        </div>
+    </header>
+    
+    <main>
+        <div id="searchEmployee">
+            <h3>Corporate Directory</h3>
+            <input type="text" placeholder="&#xf002" id="search">
+            <select name="searchBy" id="searchBy">
+                <option value="name">Employee Name</option>
+                <option value="department">Department</option>
+                <option value="branch">Branch</option>
+            </select>
+            <input type="submit" name="submit" id="submit" value="search">
+        </div>
+        <div id="result">
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+
+    <script src="assets/js/main.js"></script>
+    
+</body>
+
+</html>
