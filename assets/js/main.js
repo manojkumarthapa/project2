@@ -62,9 +62,23 @@ $(document).ready(function(){
         $('#pageNumber').html(`
         page: ${pageNumber + 1} / ${pageLimitNumber}
         `)
+        if(pageNumber == 0){
+          console.log('page number is 1')
+          $('.fa-chevron-circle-left').css('visibility', 'hidden');
+        }
+        else{
+          $('.fa-chevron-circle-left').css('visibility', 'visible');
+        }
+        if(pageNumber == pageLimitNumber -1){
+          console.log(`page number is ${pageLimitNumber}`)
+          $('.fa-chevron-circle-right').css('visibility', 'hidden');
+        }
+        else{
+          $('.fa-chevron-circle-right').css('visibility', 'visible');
+        }
       })
     };
-
+    
     resultPage(pageNumber);
     $('.fa-chevron-circle-left').click(function(){
       pageNumber -= 1;
@@ -74,12 +88,7 @@ $(document).ready(function(){
       pageNumber += 1;
       resultPage(pageNumber);
     })
-    if(pageNumber == 1){
-        $('.fa-chevron-circle-left').css('visibility', 'hidden');
-      }
-    if(pageNumber == pageLimitNumber){
-      $('.fa-chevron-circle-right').css('visibility', 'hidden');
-    }
+
   }
 })
 })
@@ -91,4 +100,4 @@ $(document).ready(function(){
 
 
 
-console.log("yay2222")
+console.log("yay2444")
