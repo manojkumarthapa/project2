@@ -126,12 +126,28 @@ main {
 }
 
 #result {
-  max-height: 50vh;
-  height: 50vh;
-  background-color: rgb(77, 158, 131);
+  background-color: aquamarine;
   border-radius: 5px;
-  max-width: 75vw;
-  margin: 0 auto;
   margin-top: 13vh;
-  font-size: 20px;
+  display: grid;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: repeat(3, 1fr) !important;
+  box-shadow: 15px 4px 15px aquamarine;
+}
+
+.info {
+  padding: 20px;
+}
+
+#pageNumber {
+  text-align: center;
+}
+
+#pageNavigation {
+  margin-top: 20px;
+  text-align: center;
+}
+#pageNavigation i {
+  font-size: 1.6em;
+  cursor: pointer;
 }
