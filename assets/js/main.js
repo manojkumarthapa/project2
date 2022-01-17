@@ -14,7 +14,6 @@ $(document).ready(function(){
   $.ajax({
   url: 'assets/php/getAll.php',
   success: function(item){
-    console.log(item)
     let dataArray = [];
     let pageArray = [];
     dataNumber = item.length;
@@ -22,20 +21,18 @@ $(document).ready(function(){
     for (let i = 0; i <= item.length - 1; i++){
       if (i % 6 != 0 || i ==0){
         pageArray.push(item[i]);
-        console.log(`the i = ${JSON.stringify(item[i])}`)
         if(i == dataNumber -1){
           dataArray.push(pageArray);
           pageArray = [];
         }
       }
-      // From 97 to 100 id is not displayed. pagearray is not being pushed to dataarray
       else{
         dataArray.push(pageArray);
         pageArray = [];
         pageArray.push(item[i]);
       }
     }
-    console.log(dataArray)
+
     
     function pageLimit(num){
       pageLimitNumber = num / 6;
@@ -88,6 +85,17 @@ $(document).ready(function(){
       pageNumber += 1;
       resultPage(pageNumber);
     })
+
+    $('.menu-btn-box').click(function(){
+      $('.functionality').toggle('is-active');
+    })
+
+    
+    $('#showAll').click(function(){
+      pageNumber = 0;
+      resultPage(pageNumber);
+      $('.functionality').toggle('is-active');
+    });
 
   }
 })
