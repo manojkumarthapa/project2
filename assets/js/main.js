@@ -45,7 +45,7 @@ $(document).ready(function(){
     }
 
     function resultPageShowAll(num){
-      $('#result').html();
+      $('#result').html(``);
       pageLimit(dataNumber);
       dataArray[num].forEach(function(item){
         $('#result').append(`
@@ -263,4 +263,4 @@ $(document).ready(function(){
 
 
 
-console.log('oh');
+console.log('oh22');
