@@ -7,20 +7,22 @@ $(window).on('load', function () {
   }
 });
 
-let pageNumber = 0;
-let pageLimitNumber = 0;
-let dataNumber = 0;
+let dataArray = [];
+let pageArray = [];
 $(document).ready(function(){
+  // Show all
   $.ajax({
   url: 'assets/php/getAll.php',
   success: function(item){
-    let dataArray = [];
-    let pageArray = [];
-    dataNumber = item.length;
-    console.log(`datanumber = ${dataNumber}`)
-    for (let i = 0; i <= item.length - 1; i++){
+    let pageNumber = 0;
+    let pageLimitNumber = 0;
+    let dataNumber = 0;
+
+    let data = item.data;
+    dataNumber = data.length;
+    for (let i = 0; i <= data.length - 1; i++){
       if (i % 6 != 0 || i ==0){
-        pageArray.push(item[i]);
+        pageArray.push(data[i]);
         if(i == dataNumber -1){
           dataArray.push(pageArray);
           pageArray = [];
@@ -29,7 +31,7 @@ $(document).ready(function(){
       else{
         dataArray.push(pageArray);
         pageArray = [];
-        pageArray.push(item[i]);
+        pageArray.push(data[i]);
       }
     }
 
@@ -42,7 +44,7 @@ $(document).ready(function(){
       }
     }
 
-    function resultPage(num){
+    function resultPageShowAll(num){
       $('#result').html(``);
       pageLimit(dataNumber);
       dataArray[num].forEach(function(item){
@@ -76,14 +78,14 @@ $(document).ready(function(){
       })
     };
     
-    resultPage(pageNumber);
+    resultPageShowAll(pageNumber);
     $('.fa-chevron-circle-left').click(function(){
       pageNumber -= 1;
-      resultPage(pageNumber);
+      resultPageShowAll(pageNumber);
     })
     $('.fa-chevron-circle-right').click(function(){
       pageNumber += 1;
-      resultPage(pageNumber);
+      resultPageShowAll(pageNumber);
     })
 
     $('.menu-btn-box').click(function(){
@@ -93,10 +95,86 @@ $(document).ready(function(){
     
     $('#showAll').click(function(){
       pageNumber = 0;
-      resultPage(pageNumber);
+      resultPageShowAll(pageNumber);
       $('.functionality').toggle('is-active');
     });
 
+
+    // Show all deparments
+    $('#showDepartments').click(function(){
+      $('#result').html(``);
+      $('.functionality').toggle('is-active');
+      let pageArrayDept = [];
+      let dataArrayDepartment = [];
+      let pageNumberDept = 0;
+      let pageNumberLimitDept = 0;
+      $.ajax({
+        url: 'assets/php/getAllDepartments.php',
+        success: function(item){
+          let data = item.data;
+          let dataNumberDept = data.length;
+          for(let i=0; i <=dataNumberDept -1; i++){
+            if(i % 6 !=0 || i ==0){
+              pageArrayDept.push(data[i]);
+              if(i == dataNumberDept - 1){
+                dataArrayDepartment.push(pageArrayDept);
+                pageArrayDept = [];
+              }
+            }else{
+              dataArrayDepartment.push(pageArrayDept);
+              pageArrayDept = [];
+              pageArrayDept.push(data[i]);
+            }
+          }
+          // Add pagelimit function outside of ready 
+
+          function pageLimit(num){
+            pageNumberLimitDept = num / 6;
+            if(!Number.isInteger(pageLimitNumber)){
+              pageNumberLimitDept += 1;
+              pageNumberLimitDept = parseInt(pageNumberLimitDept);
+            }
+          }
+          function resultPageAllDepartment(num){
+            $('#result').html(``);
+            pageLimit(dataNumberDept);
+            dataArrayDepartment[num].forEach(function(item){
+              $('#result').append(`
+              <div class="card">
+                <div class="info">
+                  <h3>${item.name}</h3>
+                </div>
+              </div>
+              `)
+              $('#pageNumber').html(`
+              page: ${pageNumberDept + 1} / ${pageNumberLimitDept}
+              `)
+              if(pageNumberDept == 0){
+                $('.fa-chevron-circle-left').css('visibility', 'hidden');
+              }
+              else{
+                $('.fa-chevron-circle-left').css('visibility', 'visible');
+              }
+              if(pageNumberDept == pageNumberLimitDept -1){
+                $('.fa-chevron-circle-right').css('visibility', 'hidden');
+              }
+              else{
+                $('.fa-chevron-circle-right').css('visibility', 'visible');
+              }
+            })
+          }
+          resultPageAllDepartment(pageNumberDept);
+          $('.fa-chevron-circle-left').click(function(){
+            pageNumberDept -= 1;
+            resultPageAllDepartment(pageNumberDept);
+          })
+          $('.fa-chevron-circle-right').click(function(){
+            pageNumberDept += 1;
+            resultPageAllDepartment(pageNumberDept);
+          })
+        }
+      })
+    })
   }
 })
 })
@@ -105,7 +183,4 @@ $(document).ready(function(){
 
 
 
-
-
-
-console.log("yay2444")
+console.log('omg221122');
