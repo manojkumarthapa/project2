@@ -23,7 +23,6 @@
 
 	}	
 
-
 	$sql = 'SELECT * FROM personnel  LEFT JOIN department on personnel.departmentID = department.id LEFT JOIN location on department.locationID = location.id ';
 	$result = $conn->query($sql);
 
@@ -49,6 +48,9 @@
 		$output['data'] = [];
 		exit;
 	}	
+
+	
+
 	
 
 	echo json_encode($output);
