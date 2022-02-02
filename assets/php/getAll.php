@@ -23,7 +23,7 @@
 
 	}	
 
-	$sql = 'SELECT * FROM personnel  LEFT JOIN department on personnel.departmentID = department.id LEFT JOIN location on department.locationID = location.id ';
+	$sql = 'SELECT *, department.name AS departmentName, location.name AS locationName  FROM personnel LEFT JOIN department on personnel.departmentID = department.id LEFT JOIN location on department.locationID = location.id ';
 	$result = $conn->query($sql);
 
 	$resultData = [];

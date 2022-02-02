@@ -26,7 +26,7 @@
 
 
 
-	$countBeforeRows = 'SELECT * FROM personnel';
+	$countBeforeRows = 'SELECT * FROM department';
 	$countBeforeRowsRun = $conn -> query($countBeforeRows);
 	$rowsBeforeRows = [];
 	
@@ -39,13 +39,13 @@
 
 	
 
-	$stmt = $conn->prepare("INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES (?, ?,'',?, ?) ");
-	$stmt->bind_param('sssi', $_POST['fName'] , $_POST['lName'], $_POST['email'], $_POST['deptID']);	
+	$stmt = $conn->prepare("INSERT INTO department (name, locationID) VALUES (?, ?)");
+	$stmt->bind_param('si',$_POST['deptName'], $_POST['locationID']);	
 	$stmt->execute();
 
 
 	// $conn->query($sql);
-	$sql2 = 'SELECT * FROM personnel  LEFT JOIN department on personnel.departmentID = department.id LEFT JOIN location on department.locationID = location.id ';
+	$sql2 = 'SELECT * FROM department';
 	$result2 = $conn->query($sql2);
 	$resultData = [];
 	if($result2 -> num_rows > 0){
@@ -58,7 +58,7 @@
 			$output['status']['name'] = 'ok';
 			$output['status']['descsription'] = 'success';
 			$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-			$output['data'] = $_POST['fName']. " ". $_POST['lName']. " added to Company Directory";
+			$output['data'] = $_POST['deptName']. " added to Department located at " .$_POST['locationID'];
 			}
 		else{
 			$output['status']['code'] = "400";

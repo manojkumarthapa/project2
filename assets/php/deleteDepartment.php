@@ -23,7 +23,7 @@
 
 	}	
 
-    $sql_before = 'SELECT * FROM personnel';
+    $sql_before = 'SELECT * FROM department';
 
 	$resultFirst = $conn->query($sql_before);
 
@@ -43,14 +43,14 @@
 
 
     
-	$query = $conn->prepare('DELETE FROM personnel WHERE firstName = ? AND lastName = ?');
+	$query = $conn->prepare('DELETE FROM department WHERE name = ? ');
 
-	$query->bind_param("ss", $_POST['fName'], $_POST['lName']);
+	$query->bind_param("s", $_POST['deptName']);
 
 	$query->execute();
 
 
-    $sql_after = 'SELECT * FROM personnel';
+    $sql_after = 'SELECT * FROM department';
 
 	$resultSecond = $conn->query($sql_after);
 
@@ -70,7 +70,7 @@
 
     $resultBeforeCount = count($resultBefore);
     $resultAfterCount = count($resultAfter);
-    echo('Succesfully deleted ' . $_POST['fName'] .' '. $_POST['lName']. ' from Company Directory');
+    echo('Succesfully deleted ' . $_POST['deptName']. ' from Company Directory');
     if($resultAfterCount - $resultBeforeCount == 1){
         $output['status']['code'] = '200';
 		$output['status']['name'] = 'ok';

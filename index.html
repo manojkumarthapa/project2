@@ -8,21 +8,35 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="./assets/css/hamburgers.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/images/project2favicon.png">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
 
     <title>Company Directory</title>
 </head>
 
 <body>
+    <div id="preloader"></div>
     <header>
         <div class="headerWord">
             <a href="index.html">
                 <h2>companydirectory</h2>
             </a>
         </div>
+
+        <div id="searchEmployee">
+            <div class="sep-inp">
+                <input type="text" placeholder="&#x1F50E;&#xFE0E; Search" id="search">
+                <div class="btn-submit ">
+                    <input class="button_slide slide_down" type="submit" name="submit" id="submit" value="search">
+                </div>
+            </div>
+        </div>
+        
         <button class="hamburger hamburger--spin" type="button">
             <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
@@ -34,84 +48,27 @@
                 <li id="showAll">Show all employees</li>
                 <li id="showDepartments">Show all departments</li>
                 <li id="showLocations">Show all locations</li>
-                <li id="addEmployee"> Add employee</i></li>
-                <li id="delEmployee"> Delete employee</li>
+                <li id="addEmployee"> Add Employee</i></li>
+                <li id="addDepartment"> Add Department</i></li>
+                <li id="addLocation"> Add Location</i></li>
             </ul>
         </div>
+
     </header>
     <main>
-        <div id="searchEmployee">
-            <h3 class="main-heading">Corporate Directory</h3>
-            <div class="sep-inp">
-                <input type="text" placeholder="&#x1F50E;&#xFE0E; Search" id="search">
-                <div class="btn-submit ">
-                    <input class="button_slide slide_down" type="submit" name="submit" id="submit" value="search">
-                </div>
-            </div>
-            <span class="eg">eg. Rafael</span>
-        </div>
+        <div id="backToTop" title="Back to Top"></div>
         <div id="result">
         </div>
-        <!-- Add Employee Modal -->
-        <div id="addEmployeeModal">
-            <h2>Add Employee*</h2>
-            <div id="addEmployeeLabels">
-                <label for="addFName">First Name: </label><br>
-                <label for="addLName">Last Name: </label><br>
-                <label for="addEmail">Email:</label><br>
-                <label for="addDept">Department: </label><br>
-            </div>
-            <div id="addEmployeeInputs">
-                <input type="text" name="addFName" id="addFName" required><br>
-                <input type="text" name="addLName" id="addLName" required><br>
-                <input type="email" name="addEmail" id="addEmail" required><br>
-                <div id="addEmployeeInputsDept"></div>
-            </div>
-            <!-- Dept and location radio added from js -->
-            <div class="employeeSaveRow">
-                <button id="addEmployeeSave" value="submit">Save</button>
-            </div>
-            <div>
-                <button id="addEmployeeclear">Clear</button>
-            </div>
-            <div>
-                <button id="addEmployeeClose"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
-        <!-- Delete Employee Modal -->
-        <div id="delEmployeeModal">
-            <h2>Delete Employee*</h2>
-            <div id="delEmployeeLabels">
-                <label for="delFName">First Name: </label><br>
-                <label for="delLName">Last Name: </label><br>
-            </div>
-            <div id="delEmployeeInputs">
-                <input type="text" name="delFName" id="delFName" required><br>
-                <input type="text" name="delLName" id="delLName" required><br>
-            </div>
-            <div class="delemployeeSaveRow">
-                <button id="delEmployeeSave" value="submit">Delete</button>
-            </div>
-            <div>
-                <button id="delEmployeeclear">Clear</button>
-            </div>
-            <div>
-                <button id="delEmployeeClose"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
 
-        <div id="pageNavigation">
-            <div id="pageNumber"></div>
-            <i class="fas fa-chevron-circle-left"></i>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <i class="fas fa-chevron-circle-right"></i>
-        </div>
+
     </main>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
         </script>
     <script src="assets/js/main.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
    
 
 </body>

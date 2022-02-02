@@ -23,7 +23,7 @@
 
 	}	
 
-    $sql_before = 'SELECT * FROM personnel';
+    $sql_before = 'SELECT * FROM location';
 
 	$resultFirst = $conn->query($sql_before);
 
@@ -43,14 +43,14 @@
 
 
     
-	$query = $conn->prepare('DELETE FROM personnel WHERE firstName = ? AND lastName = ?');
+	$query = $conn->prepare('DELETE FROM location WHERE name = ? ');
 
-	$query->bind_param("ss", $_POST['fName'], $_POST['lName']);
+	$query->bind_param("s", $_POST['locationName']);
 
 	$query->execute();
 
 
-    $sql_after = 'SELECT * FROM personnel';
+    $sql_after = 'SELECT * FROM location';
 
 	$resultSecond = $conn->query($sql_after);
 

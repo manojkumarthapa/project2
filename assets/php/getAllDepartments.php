@@ -32,6 +32,11 @@
 		while($row = $result-> fetch_assoc()){
 			array_push($resultData, $row);
 		}
+
+		function sorting($a, $b){
+        	return $a['name'] <=> $b['name'];
+    	}
+		usort($resultData, 'sorting');
 		$output['status']['code'] = '200';
 		$output['status']['name'] = 'ok';
 		$output['status']['descsription'] = 'success';
