@@ -72,7 +72,7 @@ $('#backToTop').click(function(){
       let fullName;
       let fullNameArray;
       Swal.fire({
-      title: 'ENTER EMPLOYEE DETAILS THAT NEEDS TO BE EDITED',
+      title: 'ENTER EMPLOYEE DETAILS',
       html:
       '<div id="showAllEdit">'+
       '<label for="showAllFname">First Name: </label>'+
@@ -228,7 +228,7 @@ console.log('maamamazz')
         let fullName;
         let fullNameArray;
         Swal.fire({
-        title: 'ENTER EMPLOYEE DETAILS THAT NEEDS TO BE EDITED',
+        title: 'ENTER EMPLOYEE DETAILS',
         html:
         '<div id="showAllEdit">'+
         '<label for="showAllFname">First Name: </label>'+
@@ -379,7 +379,7 @@ console.log('maamamazz')
           title: 'EDIT DEPARTMENT DETAILS',
           html:
             '<div id="departmentEdit">'+
-              '<label for="departmentName">Department Name: </label>'+
+              '<label for="departmentName">Name: </label>'+
               '<input type="text" name="departmentName" id="departmentName"><br>' +
               '<label for="showAllLocation">Location: </label>'+
               '<select name="showAllLocation" id="showAllLocation">'
@@ -515,10 +515,10 @@ console.log('maamamazz')
 
         $('.edit').click(function(){
           Swal.fire({
-          title: 'EDIT DEPARTMENT DETAILS',
+          title: 'EDIT Location DETAILS',
           html:
             '<div id="locationEdit">'+
-              '<label for="locationName">Location Name: </label>'+
+              '<label for="locationName">New Name: </label>'+
               '<input type="text" name="locationName" id="locationName"><br>',
           showDenyButton: true,
           showCancelButton: true,
@@ -604,10 +604,6 @@ console.log('maamamazz')
   $('#addEmployee').click(function(){
     console.log('fking adding22zzzzzzzzzzzzzzzzzzzzzzzzzzzz')
 
-    // let fName;
-    // let lName;
-    // let email;
-    // let dept;
 
   Swal.fire({
     title: 'ENTER NEW EMPLOYEE DETAILS',
@@ -634,7 +630,7 @@ console.log('maamamazz')
         let data = item.data;
         for(let i = 0; i< data.length; i++){
           $('#addingDept').append(`
-            <option value=${data[i]['id']}>${data[i]['name']}</option>
+            <option class="deptOptions" value=${data[i]['id']}>${data[i]['name']}</option>
           `)
         }
         $('#addEmployeeModal').append(`
@@ -708,8 +704,8 @@ console.log('maamamazz')
           let locationName = '';
           let newDepartmentName = '';
           const { value: location } = await Swal.fire({
-          title: 'Enter new Department Info',
-          html: '<label for="addDepartmentName">Add department name: </label>' +
+          title: 'Department Info',
+          html: '<label for="addDepartmentName">Name: </label>' +
           '<input type="text" id="addDepartmentName" name="addDepartmentName"><br>',
           input: 'select',
           inputOptions: allLocationsObj,
@@ -720,6 +716,7 @@ console.log('maamamazz')
               newDepartmentName = $('#addDepartmentName').val();
               if(value){
                 let departmentLocationName = value;
+                console.log(departmentLocationName)
                 if(newDepartmentName == ""){
                   resolve('Enter a name for new Department');
                 }
@@ -761,7 +758,7 @@ console.log('maamamazz')
       Swal.fire({
       title: 'Enter new location name',
       html: 
-      '<label for="addLocationName">New location name: </label>' +
+      '<label for="addLocationName">Name: </label>' +
       '<input type="text" name="addLocationName" id="addLocationName">',
       showDenyButton: true,
       showCancelButton: false,
@@ -872,6 +869,7 @@ console.log('maamamazz')
         }else{
           $('#result').html(`
           <h4 class="result-err">
+            <img id="noDataImg" src="assets/images/noData.jpg" alt="no data" title="no data">
             <div>
                 <span class="not-found">NOT FOUND</span>
             </div>

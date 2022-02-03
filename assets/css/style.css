@@ -354,13 +354,34 @@ i {
     font-size: 18px !important;
   }
   #showAllEdit {
-    padding-left: 70px;
+    padding: 20px 0px !important;
+    padding-left: 70px !important;
   }
   #showAllEdit input {
     width: 80%;
   }
   #showAllEdit select {
     max-width: 80%;
+  }
+  #locationEdit {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 5px;
+  }
+  #addingLName {
+    margin-left: 1.2px;
+  }
+  #addingDept {
+    max-width: 205px;
+  }
+  .swal2-select {
+    padding: 0px !important;
+    color: #000 !important;
+    background: white !important;
+    /* margin: 5px 15px 10px 0 !important; */
+  }
+  #addDepartmentName {
+    width: 300px;
   }
 }
 
@@ -387,6 +408,26 @@ i {
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 50px;
     padding: 50px 0;
+  }
+  #locationEdit {
+    text-align: center;
+  }
+  #addEmployeeLabels {
+    text-align: center;
+  }
+  #addEmployeeLabels input {
+    width: 300px !important;
+  }
+  #addingDept {
+    width: 300px !important;
+  }
+  .swal2-select {
+    padding: 0px !important;
+    color: #000 !important;
+    background: white !important;
+  }
+  #departmentEdit input {
+    width: 300px;
   }
 }
 
@@ -463,6 +504,10 @@ input[type="submit"] {
   border: 0;
   margin-top: 5px;
 }
+.edit:hover,
+.delete:hover {
+  background-color: #e43408;
+}
 
 .button_slide {
   color: #fff;
@@ -526,12 +571,25 @@ input[type="submit"] {
   padding: 15px;
 }
 
-.result-err {
-  margin-left: 40vw;
-  transform: translateX(-50px);
-  width: 100vw;
+.swal2-select {
+  width: 200px;
 }
+.result-err {
+  text-align: center;
+  grid-column: 1/-1;
+  color: #9e9e9e;
+}
+
+.result-err span {
+  color: #000;
+}
+
 .not-found {
-  padding-left: 80px;
+  font-size: 25px;
+  margin-bottom: 8px;
+  display: block;
   font-weight: bold;
+}
+#noDataImg {
+  max-width: 100px;
 }
