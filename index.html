@@ -12,7 +12,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600&display=swap"
+        rel="stylesheet">
     <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
 
 
@@ -36,27 +37,29 @@
                 </div>
             </div>
         </div>
-        
+
         <button class="hamburger hamburger--spin" type="button">
             <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
             </span>
         </button>
         <div class="overlay"></div>
-        <div class="menu">
-            <ul class="functionality is-active">
-                <li id="showAll">Show all employees</li>
-                <li id="showDepartments">Show all departments</li>
-                <li id="showLocations">Show all locations</li>
-                <li id="addEmployee"> Add Employee</i></li>
-                <li id="addDepartment"> Add Department</i></li>
-                <li id="addLocation"> Add Location</i></li>
-            </ul>
-        </div>
 
     </header>
+    <div class="menu">
+        <ul class="functionality is-active">
+            <li id="showAll">Show all employees</li>
+            <li id="showDepartments">Show all departments</li>
+            <li id="showLocations">Show all locations</li>
+        </ul>
+    </div>
     <main>
         <div id="backToTop" title="Back to Top"></div>
+        <div id="add">
+            <img src="assets/images/add-userv2.png" id="addEmployee" alt="Add employee">
+            <img src="assets/images/add-departmentv2.png" id="addDepartment" title="Add department">
+            <img src="assets/images/add-locationv2.png" id="addLocation" title="Add location">
+        </div>
         <div id="result">
         </div>
     </main>
@@ -67,7 +70,7 @@
     <script src="assets/js/main.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
-   
+
 
 </body>
 

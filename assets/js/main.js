@@ -13,19 +13,42 @@ $(document).ready(function(){
   $('li').click(function () {
     menu.classList.toggle("toggle-class")
     hamburger.classList.remove("is-active")
+    main.classList.remove("result-padding")
+    main.classList.remove("mobile-padding")
+    main.classList.remove("medium-padding")
+     main.classList.remove("large-padding")
   });
 
 var hamburger = document.querySelector(".hamburger");
     var menu = document.querySelector(".menu");
-    var employeemodal = document.querySelector('#addEmployeeModal');
+    var main = document.getElementsByTagName('main')[0];
     // On click
     hamburger.addEventListener("click", function () {
         // Toggle class "is-active"
         hamburger.classList.toggle("is-active");
         // Do something else, like open/close menu
         menu.classList.toggle("toggle-class")
-    });
+        main.classList.toggle('result-padding');
 
+        if (window.matchMedia("(min-width: 580px)").matches) {
+            main.classList.toggle('mobile-padding');
+        } 
+        if (window.matchMedia("(max-width: 580px)").matches) {
+            main.classList.toggle('mobile-padding');
+        } 
+         if (window.matchMedia("(max-width: 768px)").matches) {
+            main.classList.toggle('result-padding');
+        } 
+         if (window.matchMedia("(min-width: 768px)").matches) {
+            main.classList.toggle('medium-padding');
+        } 
+        if (window.matchMedia("(max-width: 1200px)").matches) {
+            main.classList.toggle('result-padding');
+        } 
+        if (window.matchMedia("(min-width: 1800px)").matches) {
+            main.classList.toggle('large-padding');
+        } 
+      });
 $(window).scroll(function(){
   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
     $('#backToTop').css('display', 'block');
@@ -47,24 +70,37 @@ $('#backToTop').click(function(){
     $('#result').html('');
     $('#showAllDeparment').html('');
     $('#showAllLocations').html('');
+    $('#add >img').css('display', 'none');
+    $('#addEmployee').css('display', 'block');
     let data = item.data;
     let currentId = 0;
     data.forEach(function(item){
       $('#result').append(`
       <div class="card">
-        <div class="info" >
-          <h3 id="fullName${currentId}">${item.lastName} ${item.firstName}</h3>
-          <h4>${item.email}</h4>
-          <h4>${item.departmentName}</h4>
-          <h4>${item.locationName}</h4>
-        </div>
-        <div class=showAllFunctions>
-          <button class= 'edit' id='edit${currentId}'>Edit</button>
-          <button class='delete' id='delete${currentId}'>Delete</button>
+        <div class="info">
+          <div class= "fontAwesome">
+          <i class="fas fa-user-alt"></i>
+          <i class="fas fa-envelope"></i>
+          <i class="fas fa-building"></i>
+          <i class="fas fa-globe-americas"></i>
+          </div>
+          <div>
+            <h3 id="fullName${currentId}">${item.lastName}, ${item.firstName}</h3>
+            <h4 id="email${currentId}">${item.email}</h4>
+            <h4 id="department${currentId}">${item.departmentName}</h4>
+            <h4 id="location${currentId}">${item.locationName}</h4>
+          </div>
+          <div>
+          </div>
+          <div class=showAllFunctions>
+            <button class= 'edit' id='edit${currentId}'>Edit</button>
+            <button class='delete' id='delete${currentId}'>Delete</button>
+          </div>
         </div>
       </div>
       `)
       currentId += 1;
+      $('#addEmployee').css('display', 'block');
     })
     let editId;
 
@@ -88,8 +124,7 @@ $('#backToTop').click(function(){
       showCancelButton: true,
       confirmButtonText: 'Save',
       denyButtonText: `Don't save`,
-    }
-      ,$.ajax({
+    },$.ajax({
         url: 'assets/php/getAllDepartments.php',
         success: function(departments){
           departments.data.forEach(function(item){
@@ -106,8 +141,24 @@ $('#backToTop').click(function(){
       editId = $(this).attr('id')
       ,editId = editId.slice(4)
       ,fullName = $(`#fullName${editId}`).text()
-      ,console.log(fullName)
       ,fullNameArray = fullName.split(" ")
+      ,thisFname = fullNameArray[1]
+      ,thisLname = fullNameArray[0]
+      ,thisLname = thisLname.slice(0,-1)
+      ,thisEmail = $(`#email${editId}`).text()
+      ,thisDept = $(`#department${editId}`).text()
+      ,$.ajax({
+        url: 'assets/php/searchDepartment.php',
+        method: 'POST',
+        data: {'oldName' : thisDept},
+        success:function(item){
+          let thisDeptID = item.data.personnel[0].id;
+          $('#showAllFname').val(`${thisFname}`)
+          $('#showAllLname').val(`${thisLname}`)
+          $('#showAllEmail').val(`${thisEmail}`)
+          $('#showAllDeparment').val(`${thisDeptID}`)
+        }
+      })
     ).then((result) => {
       let firstNameChange = $('#showAllFname').val();
       let lastNameChange = $('#showAllLname').val();
@@ -133,7 +184,6 @@ $('#backToTop').click(function(){
           }else if(!departmentIDChange){
             departmentIDChange = data.departmentID;
           }else{
-                      
           $.ajax({
             url: 'assets/php/updateEmployee.php',
             method: 'POST',
@@ -159,7 +209,6 @@ $('#backToTop').click(function(){
       }
     })
     })
-console.log('maamamazz')
 
     $('.delete').click(function(){
       Swal.fire({
@@ -197,6 +246,8 @@ console.log('maamamazz')
 
   //  When user clicks show all
   $('#showAll').click(function(){
+    $('#add >img').css('display', 'none');
+    $('#addEmployee').css('display', 'block');
     $.ajax({
     url: 'assets/php/getAll.php',
     success: function(item){
@@ -206,21 +257,32 @@ console.log('maamamazz')
       let data = item.data;
       let currentId = 0;
       data.forEach(function(item){
-        $('#result').append(`
-        <div class="card">
-          <div class="info" >
-            <h3 id="fullName${currentId}">${item.lastName} ${item.firstName}</h3>
-            <h4>${item.email}</h4>
-            <h4>${item.departmentName}</h4>
-            <h4>${item.locationName}</h4>
+      $('#result').append(`
+      <div class="card">
+        <div class="info">
+          <div class= "fontAwesome">
+          <i class="fas fa-user-alt"></i>
+          <i class="fas fa-envelope"></i>
+          <i class="fas fa-building"></i>
+          <i class="fas fa-globe-americas"></i>
+          </div>
+          <div class="details">
+            <h3 id="fullName${currentId}">${item.lastName}, ${item.firstName}</h3>
+            <h4 id="email${currentId}">${item.email}</h4>
+            <h4 id="department${currentId}">${item.departmentName}</h4>
+            <h4 id="location${currentId}">${item.locationName}</h4>
+          </div>
+          <div>
           </div>
           <div class=showAllFunctions>
             <button class= 'edit' id='edit${currentId}'>Edit</button>
             <button class='delete' id='delete${currentId}'>Delete</button>
           </div>
         </div>
-        `)
+      </div>
+      `)
         currentId += 1;
+        $('#addEmployee').css('display', 'block');
       })
       let editId;
 
@@ -257,12 +319,28 @@ console.log('maamamazz')
         })
         ,$('#showAllEdit').append(`
           </select><br>
-        `),
-        editId = $(this).attr('id')
+        `)
+        ,editId = $(this).attr('id')
         ,editId = editId.slice(4)
         ,fullName = $(`#fullName${editId}`).text()
-        ,console.log(fullName)
         ,fullNameArray = fullName.split(" ")
+        ,thisFname = fullNameArray[1]
+        ,thisLname = fullNameArray[0]
+        ,thisLname = thisLname.slice(0,-1)
+        ,thisEmail = $(`#email${editId}`).text()
+        ,thisDept = $(`#department${editId}`).text()
+        ,$.ajax({
+          url: 'assets/php/searchDepartment.php',
+          method: 'POST',
+          data: {'oldName' : thisDept},
+          success:function(item){
+            let thisDeptID = item.data.personnel[0].id;
+            $('#showAllFname').val(`${thisFname}`)
+            $('#showAllLname').val(`${thisLname}`)
+            $('#showAllEmail').val(`${thisEmail}`)
+            $('#showAllDeparment').val(`${thisDeptID}`)
+          }
+        })
       ).then((result) => {
         let firstNameChange = $('#showAllFname').val();
         let lastNameChange = $('#showAllLname').val();
@@ -351,9 +429,10 @@ console.log('maamamazz')
 
     // Show all deparments
   $('#showDepartments').click(function(){
-    $('#result').html(``);;
+    $('#result').html(``);
+    $('#add >img').css('display', 'none');
+    $('#addDepartment').css('display', 'block');
     let currentId = 0;
-    let deptEditId;
     $.ajax({
       url: 'assets/php/getAllDepartments.php',
       success: function(item){
@@ -362,125 +441,166 @@ console.log('maamamazz')
           $('#result').append(`
           <div class="card">
             <div class="info">
+              <div class= "fontAwesome">
+                <i class="fas fa-building"></i>
+              </div>
+              <div>
               <h3 id="departmentName${currentId}">${department.name}</h3>
-            </div>
-            <div class=showDepartmentFunctions>
-              <button class= 'edit' id='departmentEdit${currentId}'>Edit</button>
-              <button class='delete' id='departmentDelete${currentId}'>Delete</button>
+              </div>
+              <div>
+              </div>
+              <div class=showDepartmentFunctions>
+                <button class= 'edit' id='departmentEdit${currentId}'>Edit</button>
+                <button class='delete' id='departmentDelete${currentId}'>Delete</button>
+              </div>
             </div>
           </div>
           `) 
-          currentId +=1;      
+          currentId +=1;  
+          $('#addDepartment').css('display', 'block');    
         })
         // Add edit and delete sweet alert as well as on input value change to send to php to edit the datas
         $('.edit').click(function(){
-          let deptOldName;
-          Swal.fire({
-          title: 'EDIT DEPARTMENT DETAILS',
-          html:
-            '<div id="departmentEdit">'+
-              '<label for="departmentName">Name: </label>'+
-              '<input type="text" name="departmentName" id="departmentName"><br>' +
-              '<label for="showAllLocation">Location: </label>'+
-              '<select name="showAllLocation" id="showAllLocation">'
-          ,
-          showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Save',
-          denyButtonText: `Don't save`,
-        },
-          $.ajax({
-          url: 'assets/php/getAllLocations.php',
-          success: function(locations){
-            locations.data.forEach(function(item){
-              $('#showAllLocation').append(`
-                <option value = '${item.id}'>${item.name}</option>
-              `)
-            })
-          }
-          })
-      ,$('#departmentEdit').append(`
-        </select><br>
-        </div>
-      `),
-      deptEditId = $(this).attr('id')
-      ,deptEditId = deptEditId.slice(14)
-      ,deptOldName = $(`#departmentName${deptEditId}`).text()
-    ).then((result) => {
-      let deptNameChange = $('#departmentName').val();
-      let locationIDChange = $('#showAllLocation').val();
-      console.log(deptOldName)
-      $.ajax({
-        url: 'assets/php/searchDepartment.php',
-        method: 'POST',
-        data: {
-          'oldName': deptOldName
-        },
-        success: function(deptData){
-          console.log(deptData)
-          let data = deptData.data.personnel[0];
-          let dataID = data.id;
+          let deptEditId = $(this).attr('id')
+          deptEditId = deptEditId.slice(14)
+          let departmentValue = $(`#departmentName${deptEditId}`).text();
+          let departmentValueID;
+          let departmentLocationID;
 
-          if(!deptNameChange){
-            Swal.fire('Department new name was not entered', '', 'error')
-          }else{
-            $.ajax({
-            url: 'assets/php/updateDepartment.php',
+
+          $.ajax({
+            url: 'assets/php/getDepartmentByName.php',
             method: 'POST',
-            data: {
-              'deptNameChange' : deptNameChange,
-              'locationIDChange' : locationIDChange,
-              'oldName' : deptOldName
+            data: {'name': departmentValue},
+            success: function(item){
+              departmentValueID = item.data[0].id;
+              departmentLocationID = item.data[0].locationID;
+
+              
+              $.ajax({
+                url: 'assets/php/checkDepartmentDepend.php',
+                method: 'POST',
+                data: {'id': departmentValueID},
+                success: function(item){
+                  let personnelCount = item.data.personnelCount[0].pc;
+
+                  if(personnelCount > 0){
+                    Swal.fire({
+                      icon: 'warning',
+                      title: 'Not authorized!',
+                      text: `${departmentValue} is linked with employee details`
+                    })
+                  }else{
+                    Swal.fire({
+                      title: 'EDIT DEPARTMENT DETAILS',
+                      html:
+                        '<div id="departmentEdit">'+
+                          '<label for="departmentName">Name: </label>'+
+                          `<input type="text" name="departmentName" id="departmentName" value=${departmentValue}><br>` +
+                          '<label for="showAllLocation">Location: </label>'+
+                          '<select name="showAllLocation" id="showAllLocation">'
+                      ,
+                      showDenyButton: true,
+                      showCancelButton: true,
+                      confirmButtonText: 'Save',
+                      denyButtonText: `Don't save`,
+                    },$.ajax({
+                      url: 'assets/php/getAllLocations.php',
+                      success: function(locations){
+                        locations.data.forEach(function(item){
+                          $('#showAllLocation').append(`
+                            <option value = '${item.id}'>${item.name}</option>
+                          `)
+                        })
+                        $('#showAllLocation').val(departmentLocationID);
+                      }
+                      })
+                    ).then((result)=>{
+                      let deptNameChange = $('#departmentName').val();
+                      let locationIDChange = $('#showAllLocation').val();
+                      if(!deptNameChange){
+                        Swal.fire('Department new name was not entered', '', 'error')
+                      }
+                      if (result.isConfirmed) {
+                        $.ajax({
+                          url: 'assets/php/updateDepartment.php',
+                          method: 'POST',
+                          data: {
+                            'deptNameChange' : deptNameChange,
+                            'locationIDChange' : locationIDChange,
+                            'oldName' : departmentValue,
+                          }
+                        })
+                        Swal.fire('Saved!', '', 'success')
+                      } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                      }
+                    })
+                   
+                  }
+                }
+              })
+
             }
           })
-          }
-          if(!locationIDChange){
-            locationIDChange = dataID;
-          }
-          // $.ajax({
-          //   url: 'assets/php/updateDepartment.php',
-          //   method: 'POST',
-          //   data: {
-          //     'deptNameChange' : deptNameChange,
-          //     'locationIDChange' : locationIDChange,
-          //     'oldName' : deptOldName
-          //   }
-          // })
-        }
-      })
-      if (result.isConfirmed) {
-        Swal.fire('Saved!', '', 'success')
-      } else if (result.isDenied) {
-        Swal.fire('Changes are not saved', '', 'info')
-      }
-    })
+
         })
+
         $('.delete').click(function(){
-          Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              let departmentDelete = $(this).attr('id');
-              departmentDelete = departmentDelete.slice(16);
-              console.log(departmentDelete);
-              let departmentDeleteText = $(`#departmentName${departmentDelete}`).text();
-              console.log(departmentDeleteText)
+
+          let deptDeleteId = $(this).attr('id')
+          deptDeleteId = deptDeleteId.slice(16)
+          let departmentDeleteValue = $(`#departmentName${deptDeleteId}`).text();
+          let departmentDeleteValueID;
+          let departmentDeleteLocationID;
+
+
+          $.ajax({
+            url: 'assets/php/getDepartmentByName.php',
+            method: 'POST',
+            data: {'name': departmentDeleteValue},
+            success: function(item){
+              departmentDeleteValueID = item.data[0].id;
+              departmentDeleteLocationID = item.data[0].locationID;
               $.ajax({
-                url: 'assets/php/deleteDepartment.php',
+                url: 'assets/php/checkDepartmentDepend.php',
                 method: 'POST',
-                data: {'deptName' : departmentDeleteText}
+                data: {'id': departmentDeleteValueID},
+                success: function(item){
+                  let personnelCount = item.data.personnelCount[0].pc;
+                  if(personnelCount > 0){
+                    Swal.fire({
+                      icon: 'warning',
+                      title: 'Not authorized!',
+                      text: `${departmentDeleteValue} is linked with employee details`
+                    })
+                  }else{
+                    Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      console.log(departmentDeleteValue);
+                      $.ajax({
+                        url: 'assets/php/deleteDepartment.php',
+                        method: 'POST',
+                        data: {'deptName' : departmentDeleteValue}
+                      })
+                      Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                      )
+                    }
+                  })
+                  }
+                }
               })
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              )
             }
           })
         })
@@ -492,6 +612,8 @@ console.log('maamamazz')
     // Show all Locations
   $('#showLocations').click(function(){
     $('#result').html(``);
+    $('#add >img').css('display', 'none');
+    $('#addLocation').css('display', 'block');
     let currentId = 0;
     let locationEditId;
     $.ajax({
@@ -502,108 +624,153 @@ console.log('maamamazz')
         $('#result').append(`
         <div class="card">
           <div class="info">
+            <div class= "fontAwesome">
+              <i class="fas fa-globe-americas"></i>
+            </div>
+            <div>
             <h3 id=locationName${currentId}>${location.name}</h3>
-          </div>
-          <div class=showDepartmentFunctions>
-            <button class= 'edit' id='locationEdit${currentId}'>Edit</button>
-            <button class='delete' id='locationDelete${currentId}'>Delete</button>
+            </div>
+            <div></div>
+            <div class=showDepartmentFunctions>
+              <button class= 'edit' id='locationEdit${currentId}'>Edit</button>
+              <button class='delete' id='locationDelete${currentId}'>Delete</button>
+            </div>
           </div>
         </div>
         `) 
         currentId += 1;
+        $('#addLocation').css('display', 'block'); 
         }) 
 
-        $('.edit').click(function(){
-          Swal.fire({
-          title: 'EDIT Location DETAILS',
-          html:
-            '<div id="locationEdit">'+
-              '<label for="locationName">New Name: </label>'+
-              '<input type="text" name="locationName" id="locationName"><br>',
-          showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Save',
-          denyButtonText: `Don't save`,
-          }
-      ,$('#locationEdit').append(`
-        </div>
-      `),
-      locationEditId = $(this).attr('id')
-      ,locationEditId = locationEditId.slice(14)
-      ,locationOldName = $(`#locationName${locationEditId}`).text()
-    ).then((result) => {
-      let locationNameChange = $('#locationName').val();
-      $.ajax({
-        url: 'assets/php/searchDepartment.php',
-        method: 'POST',
-        data: {
-          'oldName': locationOldName
-        },
-        success: function(locationData){
-          let data = locationData.data.personnel[0];
-          if(!locationNameChange){
-            Swal.fire('Location name was not saved', '', 'error')
-          }
-          $.ajax({
-            url: 'assets/php/updateDepartment.php',
-            method: 'POST',
-            data: {
-              'locationOldName' : locationOldName,
-              'locationNameChange' : locationNameChange
-            }
-          })
-        }
-      })
-      if (result.isConfirmed) {
-        Swal.fire('Saved!', '', 'success')
-      } else if (result.isDenied) {
-        Swal.fire('Changes are not saved', '', 'info')
-      }
-    })
-        })
 
+
+        $('.edit').click(function(){
+
+        let locationEditId = $(this).attr('id');
+        locationEditId = locationEditId.slice(12)
+        let locationOldName = $(`#locationName${locationEditId}`).text();
+        $.ajax({
+          url: 'assets/php/getLocationByName.php',
+          method: 'POST',
+          data: {'name': locationOldName},
+          success: function(item){
+            let thisLocationID = item.data[0].id;
+            $.ajax({
+              url: 'assets/php/checkLocationDepend.php',
+              method: 'POST',
+              data: {'id': thisLocationID},
+              success: function(item){
+                let departmentCount = item.data.departmentCount[0].dc;
+                if(departmentCount >0){
+                  Swal.fire({
+                      icon: 'warning',
+                      title: 'Not authorized!',
+                      text: `${locationOldName} is linked with department details`
+                    })
+                }else{  
+                Swal.fire({
+                title: 'EDIT Location DETAILS',
+                html:
+                  '<div id="locationEdit">'+
+                    '<label for="locationName">New Name: </label>'+
+                    `<input type="text" name="locationName" id="locationName" value='${locationOldName}'><br>`+
+                  '</div>',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                denyButtonText: `Don't save`,
+                }).then((result)=>{
+                  let locationNameChange = $('#locationName').val();
+                  console.log(locationNameChange);
+                  console.log(locationOldName);
+                  if(result.isConfirmed){
+                    if(locationNameChange){
+                      $.ajax({
+                        url: 'assets/php/updateLocation.php',
+                        method: 'POST',
+                        data: {
+                          'locationNameChange' : locationNameChange,
+                          'locationOldName' : locationOldName
+                        }
+                      })
+                    }
+                    if(!locationNameChange){
+                      Swal.fire('Need to enter location name', '', 'error')
+                    }
+                    Swal.fire('Saved', '', 'success')
+                  } else if (result.isDenied) {
+                  Swal.fire('Changes are not saved', '', 'info')
+                }
+                })
+                }
+              }
+            })
+          }
+        })
+                })
+        
+        
+
+
+   
 
 
         $('.delete').click(function(){
-          Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              let locationDelete = $(this).attr('id');
-              locationDelete = locationDelete.slice(14);
-              let locationNameOld = $(`#locationName${locationDelete}`).text();
-              console.log(locationNameOld)
+          let locationDelete = $(this).attr('id');
+          locationDelete = locationDelete.slice(14);
+          let locationNameOld = $(`#locationName${locationDelete}`).text();
+          $.ajax({
+            url: 'assets/php/getLocationByName.php',
+            method: 'POST',
+            data:{'name' : locationNameOld},
+            success: function(item){
+              let locationDeleteID = item.data[0].id;
               $.ajax({
-              url: 'assets/php/deleteLocation.php',
-              method: 'POST',
-              data: {'locationName' : locationNameOld}
-              })  
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              )
+                url: 'assets/php/checkLocationDepend.php',
+                method: 'POST',
+                data: {'id' : locationDeleteID},
+                success: function(item){
+                  let locationDepend = item.data.departmentCount[0].dc;
+                  if(locationDepend >0){
+                    Swal.fire({
+                      icon: 'warning',
+                      title: 'Not authorized!',
+                      text: `${locationNameOld} is linked with department details`
+                    })
+                  }else{
+                    Swal.fire({
+                      title: 'Are you sure?',
+                      text: "You won't be able to revert this!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Yes, delete it!'
+                    }).then((result)=>{
+                      if (result.isConfirmed) {
+                      $.ajax({
+                        url: 'assets/php/deleteLocation.php',
+                        method: 'POST',
+                        data: {'locationName' : locationNameOld}
+                      })
+                      Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                      )
+                    }
+                    })
+                  }
+                }
+              })
             }
           })
-
-
-
-
-
         })
       }
     })
   })
   // Add new Employee
-  $('#addEmployee').click(function(){
-    console.log('fking adding22zzzzzzzzzzzzzzzzzzzzzzzzzzzz')
-
+  $('#add > #addEmployee').click(function(){
 
   Swal.fire({
     title: 'ENTER NEW EMPLOYEE DETAILS',
@@ -640,24 +807,16 @@ console.log('maamamazz')
         `)
       }
     })
-    // ,fName = $('#addFName').text()
-    // ,lName = $('#addLName').text()
-    // ,email = $('#addEmail').text()
-    // ,dept = $('#addDept').text()
     
-  ).then(()=>{
-        let fName = $('#addingFName').val()
+  )
+  .then((result) => {
+    let fName = $('#addingFName').val()
     let lName = $('#addingLName').val()
     let email = $('#addingEmail').val()
     let dept = $('#addingDept').val()
-    console.log('fkmzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz')
-      console.log(email);
-      console.log(fName);
-      console.log(lName);
-      console.log(dept);
-      
-      if((email.search('@') >= 0) || ((email.search('.') >= 0)) || (fName != "") ||  (lName !="") || (dept >= 0) ) {
-                $.ajax({
+    if (result.isConfirmed) {
+      if((email.search('@') >= 0) && ((email.search('.') >= 0)) && (fName != "") &&  (lName !="") && (dept >= 0) ) {
+        $.ajax({
           url: 'assets/php/addEmployee.php',
           method: 'POST',
           data: {
@@ -667,17 +826,14 @@ console.log('maamamazz')
             'deptID' :dept
           }
         })
+        Swal.fire(`${fName} ${lName} saved!`, '', 'success')
       }else if((fName == "") || (lName =="")){
         alert('Enter all required details')
       }else if((email.search('@') < 0) || (email.search('.') < 0)){
         alert('Enter email')
       }
 
-  })
-  .then((result) => {
-    
-    if (result.isConfirmed) {
-      Swal.fire('Saved!', '', 'success')
+      
     }else if (result.isDenied) {
     Swal.fire('Changes are not saved', '', 'info')
   }
@@ -775,16 +931,16 @@ console.log('maamamazz')
               showConfirmButton: false,
               timer: 1500
             })
+          }else{
+            $.ajax({
+              url: 'assets/php/addLocation.php',
+              method: 'POST',
+              data: {'locationName' : locationName},
+              success: function(){
+                Swal.fire(`${locationName} saved!`, '', 'success')
+              }
+            })
           }
-          $.ajax({
-            url: 'assets/php/addLocation.php',
-            method: 'POST',
-            data: {'locationName' : locationName},
-            success: function(){
-              Swal.fire('Saved!', '', 'success')
-            }
-          })
-          
         }else if (result.isDenied) {
           Swal.fire('Changes are not saved', '', 'info')
         }
@@ -794,6 +950,7 @@ console.log('maamamazz')
 
     // Search Employee
     $('#submit').click(function(){
+      $('#add > img').css('display', 'none');
       console.log('submit')
       let searchParams = $('#search').val();
       let searchParamsArray = searchParams.split(" ");
@@ -832,16 +989,142 @@ console.log('maamamazz')
                       let returnedLocationName = item.data[0].name;
                       if(item.data.length > 0){
                         $('#result').html(`
-                        <div class="card">
-                          <div class="info" >
-                            <h3>${searchParamsLName} ${searchParamsFName}</h3>
-                            <h4>${dataPersonnelEmail}</h4>
-                            <h4>${returnedDepartmentName}</h4>
-                            <h4>${returnedLocationName}</h4>
+                        <div class="cardSearch">
+                          <div class="info">
+                            <div class= "fontAwesome">
+                            <i class="fas fa-user-alt"></i>
+                            <i class="fas fa-envelope"></i>
+                            <i class="fas fa-building"></i>
+                            <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <div class="details">
+                              <h3>${searchParamsLName} ${searchParamsFName}</h3>
+                              <h4>${dataPersonnelEmail}</h4>
+                              <h4>${returnedDepartmentName}</h4>
+                              <h4>${returnedLocationName}</h4>          
+                            </div>
+                            <div>
+                            </div>
+                            <div class=showAllFunctions>
+                              <button class= 'edit' id='edit${searchParamsFName}'>Edit</button>
+                              <button class='delete' id='delete${searchParamsFName}'>Delete</button>
+                            </div>
                           </div>
+                        </div>
                         `)
                       }
                       console.log(item)
+                      $(`#edit${searchParamsFName}`).click(function(){
+                        let thisId;
+                        Swal.fire({
+                          title: 'ENTER EMPLOYEE DETAILS',
+                          html:
+                          '<div id="showAllEdit">'+
+                          '<label for="showAllFname">First Name: </label>'+
+                          `<input type="text" name="showAllFname" id="showAllFname" value="${searchParamsFName}"><br>`+
+                          '<label for="showAllFname">Last Name: </label>'+
+                          `<input type="text" name="showAllLname" id="showAllLname" value="${searchParamsLName}"><br>`+
+                          '<label for="showAllFname">Email: </label>'+
+                          '<input type="email" name="showAllEmail" id="showAllEmail"><br>'+
+                          '<label for="showAllDeparment">Department: </label>'+
+                          '<select name="showAllDeparment" id="showAllDeparment">'
+                          ,
+                          showDenyButton: true,
+                          showCancelButton: true,
+                          confirmButtonText: 'Save',
+                          denyButtonText: `Don't save`,
+                        }
+                          ,$.ajax({
+                            url: 'assets/php/getAllDepartments.php',
+                            success: function(departments){
+                              departments.data.forEach(function(item){
+                                $('#showAllDeparment').append(`
+                                  <option value = '${item.id}'>${item.name}</option>
+                                `)
+                              })
+                            }
+                          })
+                          ,$('#showAllEdit').append(`
+                            </select><br>
+                          `)
+
+                          ,$.ajax({
+                            url: 'assets/php/searchEmployee.php',
+                            method: 'POST',
+                            data: {
+                              'fName': searchParamsFName,
+                              'lName': searchParamsLName
+                            },
+                            success: function(item){
+                              let data = item.data.personnel[0];
+                              let searchEmail = data.email;
+                              let searchDept = data.departmentID;
+                              $('#showAllEmail').val(`${searchEmail}`)
+                              $('#showAllDeparment').val(`${searchDept}`)
+                              thisId = data.id;
+                            }
+                          })
+                        ).then((result)=>{
+                          if(result.isConfirmed){
+                            console.log(thisId)
+                            let thisSearchFName = $('#showAllFname').val();
+                            let thisSearchLname = $('#showAllLname').val();
+                            let thisSearchEmail = $('#showAllEmail').val();
+                            let thisSeachDept = $('#showAllDeparment').val();
+                            console.log(thisSearchFName)
+                            console.log(thisSearchLname)
+                            console.log(thisSearchEmail)
+                            console.log(thisSeachDept)
+                            if(($('#showAllFname').val()) && ($('#showAllLname').val()) && ($('#showAllEmail').val()) &&($('#showAllDeparment').val())){
+                              $.ajax({
+                                url: 'assets/php/updateEmployee.php', 
+                                method: 'POST',
+                                data: {
+                                  'firstName' : thisSearchFName,
+                                  'lastName' : thisSearchLname,
+                                  'email' : thisSearchEmail,
+                                  'departmentID' : thisSeachDept,
+                                  'id' : thisId
+                                }
+                              })
+                              Swal.fire(`${thisSearchFName} ${thisSearchLname} saved!`, '', 'success');
+                            }
+                          }
+                          
+                        })
+                      })
+
+                      $(`#delete${searchParamsFName}`).click(function(){
+                        Swal.fire({
+                          title: 'Are you sure?',
+                          text: "You won't be able to revert this!",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            let deleteFname = searchParamsFName;
+                            let deleteLname =  searchParamsLName;
+                            // let fullName = $(`#fullName${editId}`).text();
+                            // let fullNameArray = fullName.split(" ");  
+                            $.ajax({
+                              url: 'assets/php/deleteEmployee.php',
+                              method: 'POST',
+                              data: {
+                                'fName' : deleteFname,
+                                'lName' : deleteLname
+                              }
+                            })
+                            Swal.fire(
+                              'Deleted!',
+                              `${deleteFname} ${deleteLname} has been deleted.`,
+                              'success'
+                            )
+                          }
+                        })
+                        })
                     }
                   })
                 }else{
@@ -883,3 +1166,4 @@ console.log('maamamazz')
   }
 )
 
+console.log('lmaozzz')

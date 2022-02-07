@@ -1,10 +1,12 @@
 <?php
 
 	// example use from browser
-	// http://localhost/companydirectory/libs/php/getPersonnelByID.php?id=<id>
+	// http://localhost/companydirectory/libs/php/getDepartmentByID.php?id=<id>
 
-	// remove next two lines for production
-	
+	// remove next two lines for production	
+
+	ini_set('display_errors', 'On');
+	error_reporting(E_ALL);
 
 	$executionStartTime = microtime(true);
 
@@ -12,7 +14,7 @@
 
 	header('Content-Type: application/json; charset=UTF-8');
 
-	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
+	$conn = new mysqli($cd_host, $cd_user,$cd_password ,$cd_dbname);
 
 	if (mysqli_connect_errno()) {
 		
@@ -21,19 +23,19 @@
 		$output['status']['description'] = "database unavailable";
 		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 		$output['data'] = [];
-
+		
 		mysqli_close($conn);
 
 		echo json_encode($output);
-
+		
 		exit;
 
 	}	
 
 
-	$query = $conn->prepare('UPDATE personnel SET firstName = ?, lastName = ?, email = ?, departmentID = ? WHERE id = ?');
+	$query = $conn->prepare('SELECT * FROM location WHERE name =  ?');
 
-	$query->bind_param("sssii", $_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['departmentID'], $_POST['id']);
+	$query->bind_param("s", $_POST['name']);
 
 	$query->execute();
 	
@@ -44,16 +46,31 @@
 		$output['status']['description'] = "query failed";	
 		$output['data'] = [];
 
-		mysqli_close($conn);
-
 		echo json_encode($output); 
-
+	
+		mysqli_close($conn);
 		exit;
 
 	}
-    
 
-	
+	$result = $query->get_result();
+
+   	$data = [];
+
+	while ($row = mysqli_fetch_assoc($result)) {
+
+		array_push($data, $row);
+
+	}
+
+	$output['status']['code'] = "200";
+	$output['status']['name'] = "ok";
+	$output['status']['description'] = "success";
+	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+	$output['data'] = $data;
+
+	echo json_encode($output); 
+
 	mysqli_close($conn);
 
 ?>
